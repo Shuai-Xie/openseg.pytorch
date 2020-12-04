@@ -62,7 +62,7 @@ class ModuleHelper(object):
             if torch_ver == '0.4':
                 from lib.extensions.inplace_abn.bn import InPlaceABNSync
                 return InPlaceABNSync(num_features, **kwargs)
-            elif torch_ver == '1.0':
+            elif torch_ver in ('1.0', '1.1'):
                 from lib.extensions.inplace_abn_1.bn import InPlaceABNSync
                 return InPlaceABNSync(num_features, **kwargs)
             elif torch_ver == '1.2':
@@ -101,7 +101,7 @@ class ModuleHelper(object):
 
                 return functools.partial(InPlaceABNSync, activation='none')
 
-            elif torch_ver == '1.0':
+            elif torch_ver in ('1.0', '1.1'):
                 from lib.extensions.inplace_abn_1.bn import InPlaceABNSync
                 if ret_cls:
                     return InPlaceABNSync
@@ -176,7 +176,10 @@ class ModuleHelper(object):
                              if '.'.join(k.split('.')[1:]) in model_dict}
 
             # used to debug
-            Log.info('Matched Keys: {}'.format(load_dict.keys()))
+            if int(os.environ.get("debug_load_model", 0)):
+                Log.info('Matched Keys List:')
+                for key in load_dict.keys():
+                    Log.info('{}'.format(key))
             model_dict.update(load_dict)
             model.load_state_dict(model_dict)
 

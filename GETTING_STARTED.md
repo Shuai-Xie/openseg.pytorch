@@ -24,7 +24,7 @@ Before executing any scripts, your should first fill up the config file `config.
 
 ## Data Preparation
 
-You need to download [Cityscapes](https://www.cityscapes-dataset.com/), [LIP](http://sysu-hcp.net/lip/) and [PASCAL-Context](https://cs.stanford.edu/~roozbeh/pascal-context/) datasets.
+You need to download [Cityscapes](https://www.cityscapes-dataset.com/), [LIP](http://sysu-hcp.net/lip/), [PASCAL-Context](https://cs.stanford.edu/~roozbeh/pascal-context/) or [COCO-Stuff 10k v1.1](https://github.com/nightrome/cocostuff10k) datasets.
 
 We arrange images and labels in another way. You could preprocess the files by running:
 
@@ -33,7 +33,8 @@ python lib/datasets/preprocess/cityscapes/cityscapes_generator.py --coarse True 
   --save_dir <path/to/preprocessed_cityscapes> --ori_root_dir <path/to/original_cityscapes>
 python lib/datasets/preprocess/pascal_context/pascal_context_generator.py \
   --save_dir <path/to/preprocessed_context> --ori_root_dir <path/to/original_context>
-# TODO: LIP Preprocess
+python lib/datasets/preprocess/coco_stuff/coco_stuff_generator.py \
+  --save_dir <path/to/preprocessed_cocostuff> --ori_root_dir <path/to/original_cocostuff>
 ```
 
 and finally, the dataset directory should look like:
@@ -74,6 +75,13 @@ $DATA_ROOT
 │   │   ├── edge
 │   │   ├── image
 │   │   └── label
+├── coco_stuff_10k
+│   ├── train
+│   │   ├── image
+│   │   └── label
+│   ├── val
+│   │   ├── image
+│   │   └── label
 ```
 
 ## Inference with Pre-trained Models
@@ -88,7 +96,7 @@ After inference, you can retrieve the tested labelmaps and visualization at `$DA
 
 ## Training Models in openseg
 
-First you should download ImageNet pre-trained weights from [here](https://drive.google.com/open?id=1ulZzlTulhIUvEa27joKLbas1TtbQOI7R), and put them under `$PROJECT_ROOT/pretrained_model/`. Then run `bash <script> train <name>` to start training, where `<script>` is path to the corresponding training script, and `<name>` is arbitary string to help you identify the experiments.
+First you should download ImageNet pre-trained weights from [here](https://github.com/hsfzxjy/models.storage/releases/tag/openseg-pytorch-pretrained), and put them under `$PROJECT_ROOT/pretrained_model/`. Then run `bash <script> train <name>` to start training, where `<script>` is path to the corresponding training script, and `<name>` is arbitary string to help you identify the experiments.
 
 For example, to train HRNet-W48 + OCR on Cityscapes, you may run `bash scripts/cityscapes/hrnet/run_h_48_d_4_ocr.sh train 1`.
 
